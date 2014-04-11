@@ -7,7 +7,7 @@ feel free to drop a line or two concerning the
 projects and code posted here. All comments,
 reviews, and revisions are welcome.
 
-There is only one request I make upon collaborators.
+There is only one request I make upon contributors.
 As this is my learning space, please do not revise
 any code posted outright. I would like to solicit
 your input, but at the same time learn about your
