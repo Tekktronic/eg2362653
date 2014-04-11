@@ -13,9 +13,9 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=dll
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/csc-5_42450_project2_blackjack_program
-OUTPUT_BASENAME=csc-5_42450_project2_blackjack_program
-PACKAGE_TOP_DIR=csc-542450project2blackjackprogram/
+OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/e_guinmapang_project_blackjack_program
+OUTPUT_BASENAME=e_guinmapang_project_blackjack_program
+PACKAGE_TOP_DIR=eguinmapangprojectblackjackprogram/
 
 # Functions
 function checkReturnCode
@@ -60,15 +60,15 @@ mkdir -p ${NBTMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory "${NBTMPDIR}/csc-542450project2blackjackprogram/bin"
+makeDirectory "${NBTMPDIR}/eguinmapangprojectblackjackprogram/bin"
 copyFileToTmpDir "${OUTPUT_PATH}.exe" "${NBTMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}.exe" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/csc-542450project2blackjackprogram.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/eguinmapangprojectblackjackprogram.tar
 cd ${NBTMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/csc-542450project2blackjackprogram.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/eguinmapangprojectblackjackprogram.tar *
 checkReturnCode
 
 # Cleanup

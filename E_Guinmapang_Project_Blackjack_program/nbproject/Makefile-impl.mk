@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=CSC-5_42450_Project2_Blackjack_program
+PROJECTNAME=E_Guinmapang_Project_Blackjack_program
 
 # Active Configuration
 DEFAULTCONF=Debug

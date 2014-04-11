@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=Cygwin_4.x-Windows
 CND_ARTIFACT_DIR_Debug=dist/Debug/Cygwin_4.x-Windows
-CND_ARTIFACT_NAME_Debug=csc-5_42450_project2_blackjack_program
-CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin_4.x-Windows/csc-5_42450_project2_blackjack_program
+CND_ARTIFACT_NAME_Debug=e_guinmapang_project_blackjack_program
+CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin_4.x-Windows/e_guinmapang_project_blackjack_program
 CND_PACKAGE_DIR_Debug=dist/Debug/Cygwin_4.x-Windows/package
-CND_PACKAGE_NAME_Debug=csc-542450project2blackjackprogram.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin_4.x-Windows/package/csc-542450project2blackjackprogram.tar
+CND_PACKAGE_NAME_Debug=eguinmapangprojectblackjackprogram.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin_4.x-Windows/package/eguinmapangprojectblackjackprogram.tar
 # Release configuration
 CND_PLATFORM_Release=Cygwin_4.x-Windows
 CND_ARTIFACT_DIR_Release=dist/Release/Cygwin_4.x-Windows
-CND_ARTIFACT_NAME_Release=csc-5_42450_project2_blackjack_program
-CND_ARTIFACT_PATH_Release=dist/Release/Cygwin_4.x-Windows/csc-5_42450_project2_blackjack_program
+CND_ARTIFACT_NAME_Release=e_guinmapang_project_blackjack_program
+CND_ARTIFACT_PATH_Release=dist/Release/Cygwin_4.x-Windows/e_guinmapang_project_blackjack_program
 CND_PACKAGE_DIR_Release=dist/Release/Cygwin_4.x-Windows/package
-CND_PACKAGE_NAME_Release=csc-542450project2blackjackprogram.tar
-CND_PACKAGE_PATH_Release=dist/Release/Cygwin_4.x-Windows/package/csc-542450project2blackjackprogram.tar
+CND_PACKAGE_NAME_Release=eguinmapangprojectblackjackprogram.tar
+CND_PACKAGE_PATH_Release=dist/Release/Cygwin_4.x-Windows/package/eguinmapangprojectblackjackprogram.tar
 #
 # include compiler specific variables
 #
