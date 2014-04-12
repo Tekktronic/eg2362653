@@ -25,6 +25,8 @@ class Card{ 				//Card class - object representing a card - has a value, rank, a
         int getVal(); 			//to access the card Value
         char getSuit(); 		//to access the card Suit
         char getRank(); 		//to access the card Rank
+        void SetRank(char);             //sets the card Rank
+        void SetSuit(char);             //sets the card Suit
         void SetVal(int); 		//sets the card Value
 };
 class Player{ 				//Player class - object representing the player - has a Hand, a draw count, and an ace count
@@ -40,14 +42,15 @@ class Player{ 				//Player class - object representing the player - has a Hand, 
         // These three virtual functions are overridden in derived class
         virtual void HoleCards(); 	
         virtual void DrawCard(Card*, int &, int &);
-        virtual void ScoreIt();		
+        virtual void ScoreIt();	
         void Greet(); 			//prints a greeting
-        void ShowCard(); 		//prints the Rank and Suit of the Card drawn
+        void ShowCard();		//prints the Rank and Suit of the Card drawn
         int Totalup(); 			//Returns the Total Score of a Player's hand
+        void Reset();                   //Resets the Player's variables
+        string Name(); 			//outputs the Player name
         /*int CardVal();
         char CardSt();
         char CardRk();*/
-        string Name(); 			//outputs the Player name
 };
 
 class Dealer : public Player{ 		//special kind of Player instance - Deals and shuffles the cards
@@ -58,6 +61,7 @@ class Dealer : public Player{ 		//special kind of Player instance - Deals and sh
         void HoleCards(); 		//print the Dealer's hole cards
         void DrawCard(Card*, int &, int &); 	//Draw a Card from the Shoe
         void ScoreIt(); 			//Score the Dealer starting hand
+        void Reset();                   //Resets the Dealer's variables
 };
 //Function prototypes
 Card Deck(int); 				//Creates a Shoe of decks of Card objects
@@ -71,6 +75,7 @@ int main(){
     int dChoice = 0, numDecks = 0; 	//stores the values for choice, number of decks to be used,
     int Ct = 0, t_Deck = 0; 		//number of cards in the shoe, and card count of the shoe
     char p_Hit; 			//stores whether a player chooses to draw a card or not
+    char Again;                         //asks if another hand should be dealt or not
     string P_Name; 			//stores the name input for player
     //Prompt and input player's name
     cout << "Let's play blackjack!\n";
@@ -83,7 +88,7 @@ int main(){
     cout << "How many decks did you want to use in the shoe? ";
     cin >> numDecks;
     Ct = 52 * numDecks;			//Get the number of cards in the Shoe
-    t_Deck = Ct - 1;
+    t_Deck = Ct - 1;                    //sets the Shoe[] index t_Deck to the number of cards minus 1
     Card Shoe[Ct]; 			//create the Shoe and populate it with the appropriate number of Cards
     Shuffle(Shoe, Ct); 			//shuffle the Shoe
     //Prompt and choose your Dealer
@@ -106,44 +111,50 @@ int main(){
         }
     }
     Dealer *Deal_X = new Dealer(P_Name); 	//pointer to the Dealer instance
-    Player1-> DrawCard(Shoe, Ct, t_Deck); 	//Deal the Hole Cards from the Shoe to the Player
-    Deal_X-> DrawCard(Shoe, Ct, t_Deck); 	//Deal the Hole Cards from the Shoe to the Dealer
-    Player1-> DrawCard(Shoe, Ct, t_Deck);
-    Deal_X-> DrawCard(Shoe, Ct, t_Deck); 
-    Player1-> HoleCards(); 					//display the Player's Hole Cards
-    Deal_X-> HoleCards(); 					//display the Dealer's Hole Cards
-    cout << "Your hand is now at " << Player1-> Totalup() << endl; //display the value of Player's Hand
-    //Prompt if Player wants to hit
-    cout << "Would you like to get another card (Y/N)? ";
-    cin >> p_Hit;
-    while(p_Hit == 'Y' || p_Hit == 'y'){
-        Player1-> DrawCard(Shoe, Ct, t_Deck); 		//Draws a Card from the Shoe
-        Player1-> ShowCard(); 				//displays the Card drawn
-        cout << "Your hand is now at " << Player1-> Totalup() << endl;
-        //Check if Player is Busted. If not, Player may Hit again until Busted or max number of Cards is reached
-        if(isBusted(Player1-> Totalup())){
-            cout << Player1-> Name() << " is BUSTED!!!!\n";
-            break;
-        }
+    do{
+        Player1-> DrawCard(Shoe, Ct, t_Deck); 	//Deal the Hole Cards from the Shoe to the Player
+        Deal_X-> DrawCard(Shoe, Ct, t_Deck); 	//Deal the Hole Cards from the Shoe to the Dealer
+        Player1-> DrawCard(Shoe, Ct, t_Deck);
+        Deal_X-> DrawCard(Shoe, Ct, t_Deck); 
+        Player1-> HoleCards(); 					//display the Player's Hole Cards
+        Deal_X-> HoleCards(); 					//display the Dealer's Hole Cards
+        cout << "Your hand is now at " << Player1-> Totalup() << endl; //display the value of Player's Hand
+        //Prompt if Player wants to hit
         cout << "Would you like to get another card (Y/N)? ";
         cin >> p_Hit;
-    }
-    if(!(isBusted(Player1-> Totalup()))){
-        cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
-		//This is the "Soft 17 rule: Dealer MUST hit until Hand value is 17 or higher
-        while(Deal_X -> Totalup() < 17){
-            cout << Deal_X-> Name() << " draws a card.\n";
-            Deal_X-> DrawCard(Shoe, Ct, t_Deck); 	//Draws a Card from the Shoe
-            Deal_X-> ShowCard(); 			//displays the Card drawn
-            cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
+        while(p_Hit == 'Y' || p_Hit == 'y'){
+            Player1-> DrawCard(Shoe, Ct, t_Deck); 		//Draws a Card from the Shoe
+            Player1-> ShowCard(); 				//displays the Card drawn
+            cout << "Your hand is now at " << Player1-> Totalup() << endl;
+            //Check if Player is Busted. If not, Player may Hit again until Busted or max number of Cards is reached
+            if(isBusted(Player1-> Totalup())){
+                cout << Player1-> Name() << " is BUSTED!!!!\n";
+                break;
+            }
+            cout << "Would you like to get another card (Y/N)? ";
+            cin >> p_Hit;
         }
-        if(isBusted(Deal_X-> Totalup())) cout << Deal_X-> Name() << " is BUSTED!!!!\n";
-        else cout << Deal_X-> Name() << " stays.\n";
-    }
-    //Compare Player Total and Dealer Total to determine the winner and output the appropriate name
-    cout << ((isWinner(Player1-> Totalup(), Deal_X-> Totalup())) ? Player1-> Name() : Deal_X-> Name()) << " WINS!!!\n";
-    delete Player1; 								//deletes the Plaeyr instance
-    delete Deal_X; 									//deletes the Dealer instance
+        if(!(isBusted(Player1-> Totalup()))){
+            cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
+                    //This is the "Soft 17 rule: Dealer MUST hit until Hand value is 17 or higher
+            while(Deal_X -> Totalup() < 17){
+                cout << Deal_X-> Name() << " draws a card.\n";
+                Deal_X-> DrawCard(Shoe, Ct, t_Deck); 	//Draws a Card from the Shoe
+                Deal_X-> ShowCard(); 			//displays the Card drawn
+                cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
+            }
+            if(isBusted(Deal_X-> Totalup())) cout << Deal_X-> Name() << " is BUSTED!!!!\n";
+            else cout << Deal_X-> Name() << " stays.\n";
+        }
+        //Compare Player Total and Dealer Total to determine the winner and output the appropriate name
+        cout << ((isWinner(Player1-> Totalup(), Deal_X-> Totalup())) ? Player1-> Name() : Deal_X-> Name()) << " WINS!!!\n";
+        cout << "Would you like to play another hand(Y/N)? ";
+        cin >> Again;
+        Player1 -> Reset();
+        Deal_X -> Reset();
+    }while(Again == 'Y' || Again == 'y');
+    delete Player1; 					//deletes the Player instance
+    delete Deal_X;                                      //deletes the Dealer instance
     return 0;
 }
 //Function definitions
@@ -244,6 +255,12 @@ char Card::getRank(){ 				//returns the Card Rank
 void Card::SetVal(int NewVal){ 			//Sets the Card Value to a New Value if needed
     c_Val = NewVal;
 }
+void Card::SetRank(char NewRank){               //sets the Card Rank to a New value if needed
+    c_Rank = NewRank;
+}
+void Card::SetSuit(char NewSuit){               //sets the Card suit to a New value if needed
+    c_Suit = NewSuit;
+}
 //Player class functions
 //sets the Player Name and initializes variables to zero
 Player::Player(string stName){
@@ -302,6 +319,7 @@ void Player::ScoreIt(){
     bool Over = false;                                  //boolean to check if Hand score is over 21
     int x;
     Total = 0;
+    int h_AceCt = AceCt;                                //sets the Aces in Hand to the Ace Count
     //Checks if the Current Total is Over 21
     for(x = 0; x < 5; x++){
         if(Hand[x].getRank() == 'A') AceCt++;           //increments Player's Ace Count for every Ace drawn
@@ -311,13 +329,25 @@ void Player::ScoreIt(){
     Over = isBusted(Total); 				//if Total is Over 21, determine the Value of any Aces drawn
     Total = 0; 						//reset the Total to zero
     for(x = 0; x < 5; x++){
-        while(AceCt > 0 && (Over)){
-            Total -= 10; 				//if Total is Over 21, since value of Ace == 11, decrease Total by 10 to simulate a value of 1 for Ace
-            AceCt--; 					//decrements Ace Count to account for each Ace in Player's Hand
+        while(AceCt > 0 && (Over)){                     //while Aces Count > 0 & Total is Over 21
+            Total -= 10; 				//since value of Ace == 11, decrease Total by 10 to simulate a value of 1 for Ace
+            h_AceCt--; 					//decrements Ace Count to account for each Ace in Player's Hand
             Over = isBusted(Total); 			//checks if Player Total is Over 21
         }
         c_Card = Hand[x]; 				//sets Current Card to the Card instance in Hand[x]
         Total += c_Card.getVal(); 			//get the value of the Current Card and add it to Total
+    }
+}
+//resets the Player's variables
+void Player::Reset(){
+    DrawCt = 0;
+    AceCt = 0;
+    Total = 0;
+    c_Card.SetVal(0);
+    c_Card.SetSuit('0');
+    c_Card.SetRank('0');
+    for(int ctr = 0; ctr < 5; ctr++){                   //resets the Player's Hand
+        Hand[ctr] = c_Card;
     }
 }
 //Dealer functions
@@ -354,6 +384,7 @@ void Dealer::ScoreIt(){
     bool Over = false;
     int x;
     Total = 0;
+    int h_AceCt = AceCt;                                //sets the Aces in Hand to the Ace Count
     //Checks if the Current Total is Busted
     for(x = 0; x < 5; x++){
         if(Hand[x].getRank() == 'A') AceCt++; 		//increments Player's Ace Count for every Ace drawn
@@ -363,12 +394,24 @@ void Dealer::ScoreIt(){
     Over = isBusted(Total); 				//if Total is Over 21, determine the Value of any Aces drawn
     Total = 0; 						//reset the Total to zero
     for(x = 0; x < 5; x++){
-        while(AceCt > 0 && (Over)){
-            Total -= 10; 				//if Total is Over 21, since value of Ace == 11, decrease Total by 10 to simulate a value of 1 for Ace
-            AceCt--; 					//decrements Ace Count to account for each Ace in Player's Hand
+        while(AceCt > 0 && (Over)){                     //while Aces Count > 0 & Total is Over 21
+            Total -= 10; 				//since value of Ace == 11, decrease Total by 10 to simulate a value of 1 for Ace
+            h_AceCt--; 					//decrements Aces in Hand to account for each Ace in Player's Hand
             Over = isBusted(Total);                     //checks if Dealer Total is Over 21
         }
         c_Card = Hand[x]; 				//sets Current Card to the Card instance in Hand[x]
         Total += c_Card.getVal();                       //get the value of the Current Card and add it to Total
+    }
+}
+//resets the Player's variables
+void Dealer::Reset(){
+    DrawCt = 0;
+    AceCt = 0;
+    Total = 0;
+    c_Card.SetVal(0);
+    c_Card.SetSuit('0');
+    c_Card.SetRank('0');
+    for(int ctr = 0; ctr < 5; ctr++){                   //Resets the Dealer's Hand
+        Hand[ctr] = c_Card;
     }
 }
