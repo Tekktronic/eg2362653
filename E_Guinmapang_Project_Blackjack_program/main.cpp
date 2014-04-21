@@ -53,7 +53,6 @@ class Player{ 				//Player class - object representing the player - has a Hand, 
         char CardSt();
         char CardRk();*/
 };
-
 class Dealer : public Player{ 		//special kind of Player instance - Deals and shuffles the cards
     public:
         Dealer(); 			//constructor for dealer object
@@ -69,7 +68,6 @@ Card Deck(int); 				//Creates a Shoe of decks of Card objects
 void Shuffle(Card*, int ); 			//Shuffles the Shoe
 bool isBusted(int); 				//returns true if Player or Dealer score is Busted
 bool isWinner(int, int); 			//returns true if Player score is >= Dealer score
-
 //Execution begins HERE
 int main(){
     //Declare variables
@@ -146,7 +144,7 @@ int main(){
         }while(p_Hit == 'Y' || p_Hit == 'y');
         if(!(isBusted(Player1-> Totalup()))){
             cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
-                    //This is the "Soft 17 rule: Dealer MUST hit until Hand value is 17 or higher
+            //This is the "Soft 17 rule: Dealer MUST hit until Hand value is 17 or higher
             while(Deal_X -> Totalup() < 17){
                 cout << Deal_X-> Name() << " draws a card.\n";
                 Deal_X-> DrawCard(Shoe, Ct, t_Deck); 	//Draws a Card from the Shoe
