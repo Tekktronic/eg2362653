@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 using namespace std;
 
 //Global variables and constants
@@ -41,7 +42,7 @@ class Player{ 				//Player class - object representing the player - has a Hand, 
         ~Player(); 			//destructor for player object
         // These three virtual functions are overridden in derived class
         virtual void HoleCards(); 	
-        virtual void DrawCard(Card*, int &, int &);
+        virtual bool DrawCard(Card*, int &, int &);
         virtual void ScoreIt();	
         void Greet(); 			//prints a greeting
         void ShowCard();		//prints the Rank and Suit of the Card drawn
@@ -59,7 +60,7 @@ class Dealer : public Player{ 		//special kind of Player instance - Deals and sh
         Dealer(string); 		//initializes the Dealer name
         ~Dealer(); 			//destructor for dealer object
         void HoleCards(); 		//print the Dealer's hole cards
-        void DrawCard(Card*, int &, int &); 	//Draw a Card from the Shoe
+        bool DrawCard(Card*, int &, int &); 	//Draw a Card from the Shoe
         void ScoreIt(); 			//Score the Dealer starting hand
         void Reset();                   //Resets the Dealer's variables
 };
@@ -72,44 +73,51 @@ bool isWinner(int, int); 			//returns true if Player score is >= Dealer score
 //Execution begins HERE
 int main(){
     //Declare variables
-    int dChoice = 0, numDecks = 0; 	//stores the values for choice, number of decks to be used,
+    bool maxHit = false;
+    int numDecks = 0; 	//stores the values for choice, number of decks to be used,
     int Ct = 0, t_Deck = 0; 		//number of cards in the shoe, and card count of the shoe
+    char dChoice;                       //stores the choice of Dealer
     char p_Hit; 			//stores whether a player chooses to draw a card or not
     char Again;                         //asks if another hand should be dealt or not
     string P_Name; 			//stores the name input for player
     //Prompt and input player's name
     cout << "Let's play blackjack!\n";
     cout << "What is your name? ";
-    cin >> P_Name;
+    getline(cin, P_Name);
     //Create a Player instance
     Player *Player1 = new Player(P_Name);
     Player1 -> Greet();
     //Prompt and input number of decks to be used in the game
     cout << "How many decks did you want to use in the shoe? ";
     cin >> numDecks;
+    cin.ignore();
     Ct = 52 * numDecks;			//Get the number of cards in the Shoe
     t_Deck = Ct - 1;                    //sets the Shoe[] index t_Deck to the number of cards minus 1
     Card Shoe[Ct]; 			//create the Shoe and populate it with the appropriate number of Cards
     Shuffle(Shoe, Ct); 			//shuffle the Shoe
     //Prompt and choose your Dealer
-    cout << "Choose your Dealer:\n";
-    cout << "1. Mack\n" << "2. Lila\n" << "3. Joe\n";
-    cout << "Which dealer would you like? ";
-    cin >> dChoice;
-    switch(dChoice){
-        case 1:{
-            P_Name = "Mack";
-            break;
+    do{
+        cout << "Choose your Dealer:\n";
+        cout << "1. Mack\n" << "2. Lila\n" << "3. Joe\n";
+        cout << "Which dealer would you like? ";
+        cin.get(dChoice);
+        switch(dChoice){
+            case '1':{
+                P_Name = "Mack";
+                break;
+            }
+            case '2':{
+                P_Name = "Lila";
+                break;
+            }
+            case '3':{
+                P_Name = "Joe";
+                break;
+            }
+            default: cout << "Invalid choice! Please Try again.\n";
         }
-        case 2:{
-            P_Name = "Lila";
-            break;
-        }
-        case 3:{
-            P_Name = "Joe";
-            break;
-        }
-    }
+    }while(dChoice == '1' && dChoice == '2' && dChoice == '3');
+    cin.ignore();
     Dealer *Deal_X = new Dealer(P_Name); 	//pointer to the Dealer instance
     do{
         Player1-> DrawCard(Shoe, Ct, t_Deck); 	//Deal the Hole Cards from the Shoe to the Player
@@ -119,21 +127,23 @@ int main(){
         Player1-> HoleCards(); 					//display the Player's Hole Cards
         Deal_X-> HoleCards(); 					//display the Dealer's Hole Cards
         cout << "Your hand is now at " << Player1-> Totalup() << endl; //display the value of Player's Hand
-        //Prompt if Player wants to hit
-        cout << "Would you like to get another card (Y/N)? ";
-        cin >> p_Hit;
-        while(p_Hit == 'Y' || p_Hit == 'y'){
-            Player1-> DrawCard(Shoe, Ct, t_Deck); 		//Draws a Card from the Shoe
-            Player1-> ShowCard(); 				//displays the Card drawn
-            cout << "Your hand is now at " << Player1-> Totalup() << endl;
+        do{
+            if(!maxHit){
+                cout << "Would you like to get another card (Y/N)? ";
+                cin.get(p_Hit);
+                cin.ignore();
+            }
+            if(p_Hit == 'Y' || p_Hit == 'y'){
+                Player1-> DrawCard(Shoe, Ct, t_Deck); 		//Draws a Card from the Shoe
+                Player1-> ShowCard(); 				//displays the Card drawn
+                cout << "Your hand is now at " << Player1-> Totalup() << endl;
+            }
             //Check if Player is Busted. If not, Player may Hit again until Busted or max number of Cards is reached
             if(isBusted(Player1-> Totalup())){
                 cout << Player1-> Name() << " is BUSTED!!!!\n";
                 break;
             }
-            cout << "Would you like to get another card (Y/N)? ";
-            cin >> p_Hit;
-        }
+        }while(p_Hit == 'Y' || p_Hit == 'y');
         if(!(isBusted(Player1-> Totalup()))){
             cout << Deal_X-> Name() << "\'s hand is now at " << Deal_X-> Totalup() << endl;
                     //This is the "Soft 17 rule: Dealer MUST hit until Hand value is 17 or higher
@@ -149,7 +159,8 @@ int main(){
         //Compare Player Total and Dealer Total to determine the winner and output the appropriate name
         cout << ((isWinner(Player1-> Totalup(), Deal_X-> Totalup())) ? Player1-> Name() : Deal_X-> Name()) << " WINS!!!\n";
         cout << "Would you like to play another hand(Y/N)? ";
-        cin >> Again;
+        cin.get(Again);
+        cin.ignore();
         Player1 -> Reset();
         Deal_X -> Reset();
     }while(Again == 'Y' || Again == 'y');
@@ -163,7 +174,7 @@ Card Deck(int Ctr){
     char St, Rk;
     Card anDeck[52]; 				//array representing one deck of Cards
     int j = 0, v = 0; 				//iterators for the loops
-    srand(time(0)); 				//seed the rand() function)
+    srand(static_cast<int>(time(0))); 		//seed the rand() function)
     //Populate the Deck
     for(int k = 0; k < 4; k++){
         switch(k){ 				//determines the Suit of each Card
@@ -186,29 +197,32 @@ Card Deck(int Ctr){
             j++; 					//This increments the Deck array index to store the next Card object created
         }
     }
-    //Shuffles one Deck of Cards
-    for (int m = 0; m < 52; m++){
-        int nSwap1, nSwap2;
-        nSwap1 = (rand() % 51);
-        nSwap2 = (rand() % 51);
-        swap(anDeck[nSwap1], anDeck[nSwap2]);
-    }
-    swap(anDeck[51], anDeck[34]);
     //Returns the Card object contained in the Deck array element Deck[Ctr]]
     return anDeck[Ctr];
 }
 //Shuffle the Shoe, which is made up of several Decks of Cards
 void Shuffle(Card Shoe[], int Ct){
+    int iter = Ct;
     do{
         //Get a  unique (to one deck) Card instance from the Deck array and store it in the Shoe array element Shoe[Ct]
         //until the Shoe array is full
         for(int Ctr = 0; Ctr < 52; Ctr++){ 
             Ct--; 				//decrement Ct (number of Cards in the Shoe)
             Shoe[Ct] = Deck(Ctr);
-            cout << Ct << " = " << Shoe[Ct].getRank() << Shoe[Ct].getSuit() << " value = " << Shoe[Ct].getVal() << endl; //just prints each Card. May be discarded later
+            //cout << Ct << " = " << Shoe[Ct].getRank() << Shoe[Ct].getSuit() << " value = " << Shoe[Ct].getVal() << endl; //just prints each Card. May be discarded later
             if(Ctr >= 52) Ctr = 0; 				//resets Ctr to 0 to get the next Deck of Cards
         }
     }while(Ct > 0);
+    for(int m = 0; m < iter; m++){
+        int nSwap1, nSwap2;
+        nSwap1 = (rand() % (iter - 1));
+        nSwap2 = (rand() % (iter - 1));
+        swap(Shoe[nSwap1], Shoe[nSwap2]);
+    }
+    swap(Shoe[(iter - 1)], Shoe[34]);
+    for(int prDeck = 0; prDeck < iter; prDeck++){
+        cout << prDeck << " = " << Shoe[prDeck].getRank() << Shoe[prDeck].getSuit() << " value = " << Shoe[prDeck].getVal() << endl; //just prints each Card. May be discarded later
+    }
 }
 //Check to see if anyone is busted
 bool isBusted(int Total){
@@ -288,22 +302,23 @@ void Player::HoleCards(){
          << "[" << Hand[1].getRank() << " of " << Hand[1].getSuit() << "]\n";
 }
 //Draws a Card from the Shoe
-void Player::DrawCard(Card Shoe[], int &Ct, int &t_Deck){
+bool Player::DrawCard(Card Shoe[], int &Ct, int &t_Deck){
     if(t_Deck < 0){ 							//Checks for the end of the Shoe and reshuffles the Shoe
         cout << "End of shoe reached. Reshuffling now...\n";
         Shuffle(Shoe, Ct);
         t_Deck = Ct - 1;
     }
     if(DrawCt < 5 && t_Deck >= 0){ 			//Number of Cards drawn may NOT exceed 5
-        Hand[DrawCt] = Shoe[t_Deck]; 			//Stores the Card drawn from the Shoe into the Hand array element Hand[Ct]
+        Hand[DrawCt] = Shoe[t_Deck]; 			//Stores the Card drawn from the Shoe into the Hand array element Hand[DrawCt]
         ScoreIt(); 					//Score the Hand
         c_Card = Hand[DrawCt]; 				//Store the Card drawn as the Current Card;
         DrawCt++; 					//increment the number of Cards drawn
         t_Deck--; 					//decrement the Shoe counter for the next Card to be drawn
+        return true;
     }
     else{ //if maximum number of Cards Drawn per Hand is reached, Player is no longer allowed to draw any Cards
         cout << "You have drawn the maximum number of cards.\n";
-        return;
+        return false;
     }
 }
 //Show the Card that was drawn
@@ -365,7 +380,7 @@ void Dealer::HoleCards(){
         cout << "[* of *]|" << "[" << Hand[1].getRank() << " of " << Hand[1].getSuit() << "]" << endl;
 }
 //Draws a Card from the Shoe
-void Dealer::DrawCard(Card Shoe[], int &Ct, int &t_Deck){
+bool Dealer::DrawCard(Card Shoe[], int &Ct, int &t_Deck){
     if(t_Deck < 0){ 					//Checks for the end of the Shoe and reshuffles the Shoe
         cout << "End of shoe reached. Reshuffling now...\n";
         Shuffle(Shoe, Ct);
@@ -378,6 +393,7 @@ void Dealer::DrawCard(Card Shoe[], int &Ct, int &t_Deck){
         DrawCt++; 				//increment the number of Cards drawn
         t_Deck--; 				//decrement the Shoe counter for the next Card to be drawn
     }
+    return 0;
 }
 //Determine the value of Player's Hand
 void Dealer::ScoreIt(){
