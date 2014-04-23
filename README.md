@@ -19,7 +19,7 @@ better, works more efficiently, etc.) DOES.
 
 As such, please enclose all proposed
 changes as Comments inserted preceding the First
-line which will be affected by the propsed revision/s.
+line which will be affected by the proposed revision/s.
 
 Thank you!!
 
