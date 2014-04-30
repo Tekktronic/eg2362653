@@ -1,6 +1,6 @@
 /*
  * NAME: Ezra Guinmapang
- * DATE: November 5, 20113
+ * DATE: April 30, 2014
  * PURPOSE: Program Menu for Savitch, 8th Editiion, Chapter 5 Problem Set
  */
 //Libraries
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
         cout << "**        CSC-5: C++ ASSIGNMENT Savitch Ch 5    **\n";
         cout << "**                 PROGRAM MENU                 **\n";
         cout << "**           NAME: EZRA P. GUINMAPANG           **\n";
-        cout << "**                SECTION: 47981                **\n";
+        cout << "**                SECTION: 42450                **\n";
         cout << "**           PROFESSOR: DR. MARK LEHR           **\n";
         cout << "**************************************************\n";
     do{
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
         cin >> mChoice;
         switch(mChoice[0]){
             case '1': if (mChoice[1] == '0') Prob17();
-                      else Prob6();
+                      else if(Prob6();
                       break;
             case '2': Prob7(); break;
             case '3': Prob8(); break;
