@@ -82,7 +82,7 @@ int main(int argc, char** argv){
         cin >> mChoice;
         switch(mChoice[0]){
             case '1': if (mChoice[1] == '0') Prob17();
-                      else if(Prob6();
+                      else if(Prob6());
                       break;
             case '2': Prob7(); break;
             case '3': Prob8(); break;
@@ -452,14 +452,13 @@ char Input(float &val1, float &val2, char &ctype){
     if(utype == 'L' || utype == 'l') (ctype == '1') ? cout << "m and cm " : cout << "ft and inches ";
     else (ctype == '1') ? cout << "kg and g " : cout << "lbs and oz ";
     cout << "separated by a space: ";
-    cin >> val1 >> val2; //takes units to be converted
-    while(val1 < 0 || val2 < 0){ //Input validation
-        cout << "Invalid input! Positive values only! Try again.\n";
+    do{ //Input validation
+		if(val1 < 0 || val2 < 0) cout << "Invalid input! Positive values only! Try again.\n";
         cout << "Now enter the values to be converted in ";
         (ctype == '1') ? cout << "m and cm " : cout << "ft and inches ";
         cout << "separated by a space: ";
-        cin >> val1 >> val2;
-    }
+        cin >> val1 >> val2;		//takes values to be converted
+    }while(val1 < 0 || val2 < 0);
     return utype;
 }
 void Convert(float &val1, float &val2, char &ctype, char utype){
@@ -530,7 +529,7 @@ int Prob15(){
     //Declare variables
     char Winner, choice;
     do{
-        int a_Wins = 0, b_Wins = 0, c_Wins = 0, n_Runs = 1000;
+        int a_Wins = 0, b_Wins = 0, c_Wins = 0, n_Runs = 10000;
         bool a_Alive = true, b_Alive = true, c_Alive = true;
         float a_Acc = 0.33f, b_Acc = 0.5f, c_Acc = 1.0f;
         while(choice != '1' && choice != '2'){
@@ -564,6 +563,7 @@ int Prob15(){
 bool Shoot(bool &t_Alive, float &s_Acc){
     float shot;
     shot = (static_cast<float>(rand())/static_cast<float>(RAND_MAX))*1.0f; //random float simulating the shot
+    cout << shot << endl;
     if(s_Acc > shot){ //Checks shot against accuracy
         t_Alive = false;
         cout << "Target eliminated.\n";
@@ -586,51 +586,51 @@ char StartDuel(bool a_Alive, bool b_Alive, bool c_Alive, float a_Acc, float b_Ac
             }
             else a_Acc = 0.33f;
             if(c_Alive){
-                //cout << "Aaron shoots Charlie. ";
+                cout << "Aaron shoots Charlie. ";
                 Shoot(c_Alive, a_Acc);
                 break;
             }
             else if(b_Alive){
-               // cout << "Aaron shoots Bob. ";
+                cout << "Aaron shoots Bob. ";
                 Shoot(b_Alive, a_Acc);
                 break;
             }
             else{
-              //  cout << "Aaron wins!\n";
+                cout << "Aaron wins!\n";
                 Winner = 'A';
                 break;
             }
         }
         while(b_Alive){
             if(c_Alive){
-              //      cout << "Bob shoots Charlie. ";
+                cout << "Bob shoots Charlie. ";
                 Shoot(c_Alive, b_Acc);
                 break;
             }
             else if(a_Alive){
-               // cout << "Bob shoots Aaron. ";
+                cout << "Bob shoots Aaron. ";
                 Shoot(a_Alive, b_Acc);
                 break;
             }
             else{
-             //   cout << "Bob wins!\n";
+                cout << "Bob wins!\n";
                 Winner = 'B';
                 break;
             }
         }
         while(c_Alive){
             if(b_Alive){
-              //  cout << "Charlie shoots Bob. ";
+                cout << "Charlie shoots Bob. ";
                 Shoot(b_Alive, c_Acc);
                 break;
             }
             else if(a_Alive){
-              //  cout << "Charlie shoots Aaron. ";
+                cout << "Charlie shoots Aaron. ";
                 Shoot(a_Alive, c_Acc);
                 break;
             }
             else{
-              //  cout << "Charlie wins!\n";
+                cout << "Charlie wins!\n";
                 Winner = 'C';
                 break;
             }
@@ -673,8 +673,8 @@ int Prob16(){
     }
     else isValid = false;
     cout << "v_Cent = " << v_Cent(year) << endl; //stub to test if v_Cent() returns the correct value
-    cout << "v_Year = " << v_Cent(year) << endl; //stub to test if v_Year() returns the correct value
-    cout << "v_Month = " << v_Cent(year) << endl; //stub to test if v_Month() returns the correct value
+    cout << "v_Year = " << v_Year(year) << endl; //stub to test if v_Year() returns the correct value
+    cout << "v_Month = " << v_Month(month, year) << endl; //stub to test if v_Month() returns the correct value
     if(isValid)  WkDay = (v_Cent(year) + v_Year(year) + v_Month(month, year) + day) % 7;
     else WkDay = -1;
     cout << "Day of the Week = " << WkDay << endl;
@@ -764,8 +764,8 @@ int DayOfWk(int month, int day, int year){
     }
     else isValid = false;
     cout << "v_Cent = " << v_Cent(year) << endl; //stub to test if v_Cent() returns the correct value
-    cout << "v_Year = " << v_Cent(year) << endl; //stub to test if v_Year() returns the correct value
-    cout << "v_Month = " << v_Cent(year) << endl; //stub to test if v_Month() returns the correct value
+    cout << "v_Year = " << v_Year(year) << endl; //stub to test if v_Year() returns the correct value
+    cout << "v_Month = " << v_Month(month, year) << endl; //stub to test if v_Month() returns the correct value
     if(isValid) return (v_Cent(year) + v_Year(year) + v_Month(month, year) + day) % 7;
     else return -1;
 }
