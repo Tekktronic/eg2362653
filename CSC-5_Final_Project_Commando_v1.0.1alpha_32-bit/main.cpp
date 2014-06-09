@@ -401,9 +401,9 @@ class Actor{
         Actor();                //default constructor for actor instance
         Actor(int, int);                //default constructor for actor instance
         ~Actor();               //destructor for actor instance
-        virtual tile FindTile(tile**, const int&, const int&, Actor*) = 0;        //find a match in the tile object array
-        virtual void Occupy(tile**, const int&, const int&); //virtual function to override
-        virtual bool Move(tile**, const int&, const int&);    //virtual function to override
+        virtual tile FindTile(tile**, int&, int&, Actor*) = 0;        //find a match in the tile object array
+        virtual void Occupy(tile**, int&, int&); //virtual function to override
+        virtual bool Move(tile**, int&, int&);    //virtual function to override
         virtual int ret_X();            //virtual function to override
         virtual int ret_Y();            //virtual function to override
 };
@@ -416,11 +416,11 @@ class Player: public Actor{
         vector<T_Type*> i_list;         //vector of pointers to items
     public:
         Player();               //default constructor for player instance
-        Player(tile**, const int&, const int&, string, int, int);         //constructor for player instance
+        Player(tile**, int&, int&, string, int, int);         //constructor for player instance
         ~Player();              //destructor for player instance
-        tile FindTile(tile**, const int&, const int&, Actor*);        //find a match in the tile object array
-        void Occupy(tile**, const int&, const int&);           //occupy a tile
-        bool Move(tile**, const int&, const int&);            //move the player instance to another tile
+        tile FindTile(tile**, int&, int&, Actor*);        //find a match in the tile object array
+        void Occupy(tile**, int&, int&);           //occupy a tile
+        bool Move(tile**, int&, int&);            //move the player instance to another tile
         bool GetItem();
         bool UseItem();
         bool Shoot();
@@ -437,26 +437,26 @@ class Robot: public Actor{
     public:
         Robot();               //default constructor for player instance
         Robot(int, int);
-        Robot(tile**, const int&, const int&, string, int, int);         //constructor for player instance
+        Robot(tile**, int&, int&, string, int, int);         //constructor for player instance
         ~Robot();              //destructor for player instance
-        tile FindTile(tile**, const int&, const int&, Actor*);        //find a match in the tile object array
-        void Occupy(tile**, const int&, const int&);           //occupy a tile
-        bool Move(tile**,const int&, const int&);            //move the player instance to another tile
+        tile FindTile(tile**, int&, int&, Actor*);        //find a match in the tile object array
+        void Occupy(tile**, int&, int&);           //occupy a tile
+        bool Move(tile**,int&, int&);            //move the player instance to another tile
         int ret_X();            //return posx
         int ret_Y();            //return posy
 };
 //Global variables and constants
 
 //Function prototypes
-void DispMap(tile**, const int&, const int&);    //display the map
-tile **Populate(const int&, const int&);   //populate the map
-void Destroy(tile**, const int&, const int&);   //delete the dynamic array
+void DispMap(tile**, int&, int&);    //display the map
+tile **Populate(int&, int&);   //populate the map
+void Destroy(tile**, int&, int&);   //delete the dynamic array
 //Exection begins HERE
 int main(int argc, char** argv) {
     //declare variables
     srand(static_cast<unsigned int>(time(0)));  //seed the random number generator
-    const int ROW = 20;         //row size
-    const int COL = 80;         //column size
+    int ROW = 20;         //row size
+    int COL = 80;         //column size
     tile **grid;            //2D array of tileobj pointers
     grid = Populate(ROW, COL);       //populates the array with tileobj instances
     Player *Player1 = new Player(grid, ROW, COL, "EzTmp", 1, 1);        //create the player instance
@@ -481,7 +481,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 //Populate the array with tileobj instances
-tile **Populate(const int &ROW, const int &COL){
+tile **Populate(int &ROW, int &COL){
     fstream file1, file2;
     file1.open("mapgen.dat");
     file2.open("obstacles.dat");
@@ -505,7 +505,7 @@ tile **Populate(const int &ROW, const int &COL){
     return grid;
 }
 //Display the array of tileobj instances
-void DispMap(tile **grid, const int &ROW, const int &COL){
+void DispMap(tile **grid, int &ROW, int &COL){
     cout << "#########################################";
     cout << "#########################################" << endl;
     for(int idx = 0; idx < ROW; idx++){
@@ -519,7 +519,7 @@ void DispMap(tile **grid, const int &ROW, const int &COL){
     cout << "#########################################" << endl;
 }
 //delete the dynamic array
-void Destroy(tile **grid, const int &ROW, const int &COL){
+void Destroy(tile **grid, int &ROW, int &COL){
     for(int idx = 0; idx < ROW; idx++){
         for(int ctr = 0; ctr < COL; ctr++){
             delete grid[idx][ctr];
@@ -544,19 +544,19 @@ int Actor::ret_X(){
 int Actor::ret_Y(){
     return posy;
 }
-tile Actor::FindTile(tile **grid, const int &ROW, const int &COL, Actor *c_Actor){      //find a match in the tile object array
+tile Actor::FindTile(tile **grid, int &ROW, int &COL, Actor *c_Actor){      //find a match in the tile object array
     
 }      //find a match in the tile object array
-void Actor::Occupy(tile **grid, const int &ROW, const int &COL){
+void Actor::Occupy(tile **grid, int &ROW, int &COL){
     
 }
-bool Actor::Move(tile**grid, const int &ROW, const int &COL){
+bool Actor::Move(tile**grid, int &ROW, int &COL){
     
 }
 Player::Player(){       //default constructor for Player instance
     
 }
-Player::Player(tile **grid, const int &ROW, const int &COL, string name, int x_coord, int y_coord):Actor(x_coord, y_coord){      //creates player object, located at (posx, posy))
+Player::Player(tile **grid, int &ROW, int &COL, string name, int x_coord, int y_coord):Actor(x_coord, y_coord){      //creates player object, located at (posx, posy))
     p_Name = name;
     isAlive = true;
     c_ID = '@';
@@ -571,7 +571,7 @@ int Player::ret_X(){
 int Player::ret_Y(){
     return posy;
 }
-tile Player::FindTile(tile **grid, const int &ROW, const int &COL, Actor *c_Actor){
+tile Player::FindTile(tile **grid, int &ROW, int &COL, Actor *c_Actor){
     int x_coord = c_Actor->ret_X();
     int y_coord = c_Actor->ret_Y();
     for(int idx = 0; idx < ROW; idx++){
@@ -582,11 +582,11 @@ tile Player::FindTile(tile **grid, const int &ROW, const int &COL, Actor *c_Acto
         }
     }
 }
-void Player::Occupy(tile **grid, const int &ROW, const int &COL){
+void Player::Occupy(tile **grid, int &ROW, int &COL){
         t_obj = FindTile(grid, ROW, COL, this);
         t_obj->SetDisp(posx, posy, c_ID);
 }
-bool Player::Move(tile **grid, const int &ROW, const int &COL){
+bool Player::Move(tile **grid, int &ROW, int &COL){
     bool isValid = false;
     int ch_x;
     int ch_y;
@@ -684,7 +684,7 @@ Robot::Robot(int x_coord, int y_coord){
     posx = x_coord;
     posy = y_coord;
 }
-Robot::Robot(tile **grid, const int &ROW, const int &COL, string name, int x_coord, int y_coord):Actor(x_coord, y_coord){      //creates player object, located at (posx, posy))
+Robot::Robot(tile **grid, int &ROW, int &COL, string name, int x_coord, int y_coord):Actor(x_coord, y_coord){      //creates player object, located at (posx, posy))
     p_Name = name;
     c_ID = '?';
     t_obj = FindTile(grid, ROW, COL, this);
@@ -698,7 +698,7 @@ int Robot::ret_X(){
 int Robot::ret_Y(){
     return posy;
 }
-tile Robot::FindTile(tile **grid, const int &ROW, const int &COL, Actor *c_Actor){
+tile Robot::FindTile(tile **grid, int &ROW, int &COL, Actor *c_Actor){
     int x_coord = c_Actor->ret_X();
     int y_coord = c_Actor->ret_Y();
     for(int idx = 0; idx < ROW; idx++){
@@ -709,11 +709,11 @@ tile Robot::FindTile(tile **grid, const int &ROW, const int &COL, Actor *c_Actor
         }
     }
 }
-void Robot::Occupy(tile **grid, const int &ROW, const int &COL){
+void Robot::Occupy(tile **grid, int &ROW, int &COL){
         t_obj = FindTile(grid, ROW, COL, this);
         t_obj->SetDisp(posx, posy, c_ID);
 }
-bool Robot::Move(tile **grid, const int &ROW, const int &COL){
+bool Robot::Move(tile **grid, int &ROW, int &COL){
     t_obj->SetEmpty();
     bool isValid = false;
     int move; 
